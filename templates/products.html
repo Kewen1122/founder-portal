@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Produkte{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>Softwareprodukte</h2>
+
+    <a href="/products/new" class="btn btn-success">
+        + Neues Produkt
+    </a>
+
+</div>
+
+<table class="table table-hover table-bordered">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Name</th>
+            <th>Edition</th>
+            <th>Version</th>
+            <th>Preis</th>
+            <th>Status</th>
+            <th width="220">Aktionen</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for product in products %}
+
+        <tr>
+
+            <td>{{ product.name }}</td>
+
+            <td>{{ product.edition }}</td>
+
+            <td>{{ product.current_version }}</td>
+
+            <td>{{ "%.2f"|format(product.price) }} €</td>
+
+            <td>
+
+                {% if product.status == "active" %}
+
+                    <span class="badge bg-success">
+
+                        Aktiv
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+
+                        Inaktiv
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <a
+                    href="/products/edit/{{ product.id }}"
+                    class="btn btn-warning btn-sm">
+
+                    Bearbeiten
+
+                </a>
+
+                <a
+                    href="/products/delete/{{ product.id }}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Produkt wirklich löschen?');">
+
+                    Löschen
+
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td colspan="6" class="text-center">
+
+                Noch keine Produkte vorhanden.
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

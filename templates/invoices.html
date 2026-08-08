@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Rechnungen{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>Rechnungen</h2>
+
+    <a href="#" class="btn btn-success">
+
+        + Neue Rechnung
+
+    </a>
+
+</div>
+
+<table class="table table-hover table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Nummer</th>
+
+<th>Kunde</th>
+
+<th>Datum</th>
+
+<th>Gesamt</th>
+
+<th>Status</th>
+
+<th>Aktionen</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for invoice in invoices %}
+
+<tr>
+
+<td>
+
+    <a
+        href="/invoices/{{ invoice.id }}"
+        class="btn btn-primary btn-sm">
+
+        Details
+
+    </a>
+
+    <a
+        href="/invoices/pdf/{{ invoice.id }}"
+        class="btn btn-success btn-sm">
+
+        PDF
+
+    </a>
+
+</td>
+</tr>
+
+{% else %}
+
+<tr>
+
+<td colspan="5" class="text-center">
+
+Noch keine Rechnungen vorhanden.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}
+

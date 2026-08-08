@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Founder Dashboard</h2>
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h1>{{ customer_count }}</h1>
+
+                <p>Kunden</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h1>{{ product_count }}</h1>
+
+                <p>Produkte</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h1>{{ active_license_count }}</h1>
+
+                <p>Aktive Lizenzen</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h1>{{ revoked_license_count }}</h1>
+
+                <p>Widerrufen</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <strong>Neueste Kunden</strong>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Firma</th>
+
+                            <th>Kontakt</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for c in latest_customers %}
+
+                        <tr>
+
+                            <td>{{ c.company }}</td>
+
+                            <td>{{ c.contact }}</td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="2">
+
+                                Keine Kunden vorhanden.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <strong>Neueste Lizenzen</strong>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Kunde</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for l in latest_licenses %}
+
+                        <tr>
+
+                            <td>{{ l.company }}</td>
+
+                            <td>
+
+                                {% if l.status == "active" %}
+
+                                    <span class="badge bg-success">
+
+                                        Aktiv
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Widerrufen
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="2">
+
+                                Noch keine Lizenzen vorhanden.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ customer.company }}{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+
+        <h2>{{ customer.company }}</h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <h5>Kontaktdaten</h5>
+
+                <table class="table">
+
+                    <tr>
+                        <th>Ansprechpartner</th>
+                        <td>{{ customer.contact }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>E-Mail</th>
+                        <td>{{ customer.email }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Telefon</th>
+                        <td>{{ customer.phone }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="alert alert-info">
+
+                    <h5>Lizenzen</h5>
+
+                    <p>Noch keine Lizenzen vorhanden.</p>
+
+                </div>
+
+                <div class="alert alert-secondary">
+
+                    <h5>Installationen</h5>
+
+                    <p>Noch keine Installationen vorhanden.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <a
+            href="/customers/edit/{{ customer.id }}"
+            class="btn btn-warning">
+
+            Kunde bearbeiten
+
+        </a>
+
+        <a
+            href="/customers"
+            class="btn btn-secondary">
+
+            Zurück
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

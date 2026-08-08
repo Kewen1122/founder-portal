@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if customer %}
+Kunde bearbeiten
+{% else %}
+Neuen Kunden anlegen
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+                {% if customer %}
+                    Kunde bearbeiten
+                {% else %}
+                    Neuen Kunden anlegen
+                {% endif %}
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Firmenname
+                    </label>
+
+                    <input
+                        type="text"
+                        name="company"
+                        class="form-control"
+                        required
+                        value="{{ customer.company if customer else '' }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Ansprechpartner
+                    </label>
+
+                    <input
+                        type="text"
+                        name="contact"
+                        class="form-control"
+                        value="{{ customer.contact if customer else '' }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        E-Mail
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        value="{{ customer.email if customer else '' }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Telefon
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control"
+                        value="{{ customer.phone if customer else '' }}">
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <a href="/customers" class="btn btn-secondary">
+                        ← Zurück
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+
+                        {% if customer %}
+                            Änderungen speichern
+                        {% else %}
+                            Kunde anlegen
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

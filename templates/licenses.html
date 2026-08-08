@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Lizenzen{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>Lizenzverwaltung</h2>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-success text-white">
+
+        <strong>Neue Lizenz erstellen</strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="post" action="/licenses/new">
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <label class="form-label">Kunde</label>
+
+                    <select
+                        name="customer_id"
+                        class="form-select"
+                        required>
+
+                        {% for customer in customers %}
+
+                        <option value="{{ customer.id }}">
+
+                            {{ customer.company }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label">Produkt</label>
+
+                    <select
+                        name="product_id"
+                        class="form-select"
+                        required>
+
+                        {% for product in products %}
+
+                        <option value="{{ product.id }}">
+
+                            {{ product.name }} {{ product.edition }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label">Laufzeit</label>
+
+                    <select
+                        name="duration"
+                        class="form-select">
+
+                        <option value="30d">30 Tage</option>
+                        <option value="90d">90 Tage</option>
+                        <option value="180d">6 Monate</option>
+                        <option value="365d" selected>12 Monate</option>
+                        <option value="730d">24 Monate</option>
+                        <option value="lifetime">Unbegrenzt</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label">
+
+                        Max. Benutzer
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="max_users"
+                        class="form-control"
+                        value="10"
+                        min="1">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label">
+
+                        Lizenztyp
+
+                    </label>
+
+                    <select
+                        name="license_type"
+                        class="form-select">
+
+                        <option value="standard">
+
+                            Standard
+
+                        </option>
+
+                        <option value="trial">
+
+                            Test
+
+                        </option>
+
+                        <option value="enterprise">
+
+                            Enterprise
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Features
+
+                </label>
+
+                <div>
+
+                    <label class="me-3">
+
+                        <input
+                            type="checkbox"
+                            name="features"
+                            value="inventory">
+
+                        Inventur
+
+                    </label>
+
+                    <label class="me-3">
+
+                        <input
+                            type="checkbox"
+                            name="features"
+                            value="barcode">
+
+                        Barcode
+
+                    </label>
+
+                    <label class="me-3">
+
+                        <input
+                            type="checkbox"
+                            name="features"
+                            value="reports">
+
+                        Reports
+
+                    </label>
+
+                    <label class="me-3">
+
+                        <input
+                            type="checkbox"
+                            name="features"
+                            value="api">
+
+                        API
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <button class="btn btn-success">
+
+                🔑 Lizenz erstellen
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<table class="table table-hover table-bordered">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Kunde</th>
+
+            <th>Produkt</th>
+
+            <th>Status</th>
+
+            <th>Gültig bis</th>
+
+            <th width="250">
+
+                Aktionen
+
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for l in licenses %}
+
+        <tr>
+
+            <td>{{ l.company }}</td>
+
+            <td>{{ l.product_name }} {{ l.product_edition }}</td>
+
+            <td>
+
+                {% if l.status=="active" %}
+
+                    <span class="badge bg-success">
+
+                        Aktiv
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+
+                        Widerrufen
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>{{ l.valid_until }}</td>
+
+            <td>
+
+                <a
+                    href="/licenses/{{ l.id }}"
+                    class="btn btn-primary btn-sm">
+
+                    Details
+
+                </a>
+
+                <a
+                    href="/licenses/download/{{ l.id }}"
+                    class="btn btn-success btn-sm">
+
+                    Download
+
+                </a>
+
+                <a
+                    href="/licenses/revoke/{{ l.id }}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Lizenz wirklich widerrufen?');">
+
+                    Widerrufen
+
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% else %}
+
+        <tr>
+
+            <td colspan="5" class="text-center">
+
+                Noch keine Lizenzen vorhanden.
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

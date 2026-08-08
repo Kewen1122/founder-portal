@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if product %}
+Produkt bearbeiten
+{% else %}
+Neues Produkt
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>
+
+{% if product %}
+
+Produkt bearbeiten
+
+{% else %}
+
+Neues Produkt
+
+{% endif %}
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="post">
+
+<div class="mb-3">
+
+<label>Name</label>
+
+<input
+type="text"
+name="name"
+class="form-control"
+required
+value="{{ product.name if product else '' }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Edition</label>
+
+<input
+type="text"
+name="edition"
+class="form-control"
+required
+value="{{ product.edition if product else '' }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Version</label>
+
+<input
+type="text"
+name="current_version"
+class="form-control"
+value="{{ product.current_version if product else '' }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Preis (€)</label>
+
+<input
+type="number"
+step="0.01"
+name="price"
+class="form-control"
+value="{{ product.price if product else '0.00' }}">
+
+</div>
+
+<div class="mb-3">
+
+<label>Beschreibung</label>
+
+<textarea
+name="description"
+class="form-control"
+rows="5">{{ product.description if product else '' }}</textarea>
+
+</div>
+
+{% if product %}
+
+<div class="mb-3">
+
+<label>Status</label>
+
+<select
+name="status"
+class="form-select">
+
+<option value="active"
+{% if product.status=="active" %}selected{% endif %}>
+Aktiv
+</option>
+
+<option value="inactive"
+{% if product.status=="inactive" %}selected{% endif %}>
+Inaktiv
+</option>
+
+</select>
+
+</div>
+
+{% endif %}
+
+<div class="d-flex justify-content-between">
+
+<a
+href="/products"
+class="btn btn-secondary">
+
+Zurück
+
+</a>
+
+<button
+class="btn btn-success">
+
+Speichern
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}
+

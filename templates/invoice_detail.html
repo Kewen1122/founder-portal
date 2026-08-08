@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Rechnung {{ invoice.invoice_number }}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>
+
+        Rechnung {{ invoice.invoice_number }}
+
+    </h2>
+
+    <a
+        href="/invoices/pdf/{{ invoice.id }}"
+        class="btn btn-success">
+
+        📄 PDF herunterladen
+
+    </a>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <h5>Kunde</h5>
+
+                <p>
+
+                    <strong>{{ invoice.company }}</strong><br>
+
+                    {{ invoice.contact }}<br>
+
+                    {{ invoice.email }}<br>
+
+                    {{ invoice.phone }}
+
+                </p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <table class="table table-borderless">
+
+                    <tr>
+
+                        <th>Rechnungsnummer</th>
+
+                        <td>{{ invoice.invoice_number }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Rechnungsdatum</th>
+
+                        <td>{{ invoice.invoice_date }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Fällig</th>
+
+                        <td>{{ invoice.due_date }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Status</th>
+
+                        <td>
+
+                            {% if invoice.status=="open" %}
+
+                                <span class="badge bg-warning">
+
+                                    Offen
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-success">
+
+                                    Bezahlt
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card shadow">
+
+    <div class="card-header">
+
+        Rechnungspositionen
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Beschreibung</th>
+
+                    <th>Menge</th>
+
+                    <th>Einzelpreis</th>
+
+                    <th>Gesamt</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in items %}
+
+                <tr>
+
+                    <td>{{ item.description }}</td>
+
+                    <td>{{ item.quantity }}</td>
+
+                    <td>{{ "%.2f"|format(item.unit_price) }} €</td>
+
+                    <td>{{ "%.2f"|format(item.total) }} €</td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <hr>
+
+        <div class="text-end">
+
+            <p>
+
+                Netto:
+
+                <strong>
+
+                    {{ "%.2f"|format(invoice.subtotal) }} €
+
+                </strong>
+
+            </p>
+
+            <p>
+
+                MwSt.:
+
+                <strong>
+
+                    {{ "%.2f"|format(invoice.vat) }} €
+
+                </strong>
+
+            </p>
+
+            <h3>
+
+                Gesamt:
+
+                {{ "%.2f"|format(invoice.total) }} €
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

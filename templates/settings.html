@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Einstellungen{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+Firmeneinstellungen
+
+</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<label>Firmenname</label>
+
+<input
+class="form-control"
+name="company_name"
+value="{{ settings.company_name if settings else '' }}">
+
+</div>
+
+<div class="col-md-6">
+
+<label>Inhaber</label>
+
+<input
+class="form-control"
+name="owner"
+value="{{ settings.owner if settings else '' }}">
+
+</div>
+
+</div>
+
+<br>
+
+<label>Straße</label>
+
+<input
+class="form-control"
+name="street"
+value="{{ settings.street if settings else '' }}">
+
+<br>
+
+<div class="row">
+
+<div class="col">
+
+<label>PLZ</label>
+
+<input
+class="form-control"
+name="zip"
+value="{{ settings.zip if settings else '' }}">
+
+</div>
+
+<div class="col">
+
+<label>Ort</label>
+
+<input
+class="form-control"
+name="city"
+value="{{ settings.city if settings else '' }}">
+
+</div>
+
+</div>
+
+<br>
+
+<label>E-Mail</label>
+
+<input
+class="form-control"
+name="email"
+value="{{ settings.email if settings else '' }}">
+
+<br>
+
+<label>Telefon</label>
+
+<input
+class="form-control"
+name="phone"
+value="{{ settings.phone if settings else '' }}">
+
+<br>
+
+<label>Webseite</label>
+
+<input
+class="form-control"
+name="website"
+value="{{ settings.website if settings else '' }}">
+
+<br>
+
+<label>USt-ID</label>
+
+<input
+class="form-control"
+name="vat_id"
+value="{{ settings.vat_id if settings else '' }}">
+
+<br>
+
+<label>IBAN</label>
+
+<input
+class="form-control"
+name="iban"
+value="{{ settings.iban if settings else '' }}">
+
+<br>
+
+<label>BIC</label>
+
+<input
+class="form-control"
+name="bic"
+value="{{ settings.bic if settings else '' }}">
+
+<br>
+
+<button class="btn btn-success">
+
+<div class="mb-3">
+
+<label>Firmenlogo</label>
+
+<input
+type="file"
+name="logo"
+class="form-control">
+
+</div>
+
+Speichern
+
+</button>
+
+</form>
+
+{% endblock %}
