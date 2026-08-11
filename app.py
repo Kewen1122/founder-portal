@@ -9,8 +9,13 @@ from routes.license_generator import generator_bp
 from routes.invoices import invoices_bp
 from routes.settings import settings_bp
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "CHANGE_ME"
+app.secret_key = os.environ["SECRET_KEY"]
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(licenses_bp)

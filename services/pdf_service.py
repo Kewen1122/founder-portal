@@ -1,21 +1,18 @@
 from pathlib import Path
-from database import get_db
-from reportlab.lib.units import mm
-from reportlab.lib.styles import getSampleStyleSheet
 
+from database import get_db
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import mm
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
     Spacer,
     Image,
-    Table,
-    TableStyle,
 )
-
-from reportlab.lib.enums import TA_RIGHT
 
 EXPORT_DIR = Path("exports/invoices")
 LOGO_DIR = Path("uploads/logos")
+
 
 def get_company_settings():
 
@@ -44,46 +41,47 @@ def create_invoice_pdf(invoice, customer):
 
     story = []
 
-if company["logo"]:
+    # Logo
+    if company["logo"]:
 
-    logo_path = LOGO_DIR / company["logo"]
+        logo_path = LOGO_DIR / company["logo"]
 
-    if logo_path.exists():
+        if logo_path.exists():
 
-        img = Image(
-            str(logo_path),
-            width=50*mm,
-            height=20*mm
+            story.append(
+                Image(
+                    str(logo_path),
+                    width=50 * mm,
+                    height=20 * mm,
+                )
+            )
+
+            story.append(Spacer(1, 5 * mm))
+
+    # Firmendaten
+    story.append(
+        Paragraph(
+            f"<b>{company['company_name']}</b>",
+            styles["Title"],
         )
+    )
 
-        story.append(img)
-
-        story.append(
-            Spacer(1, 5*mm)
+    story.append(
+        Paragraph(
+            f"""
+            {company['owner'] or ''}<br/>
+            {company['street'] or ''}<br/>
+            {company['zip'] or ''} {company['city'] or ''}<br/>
+            {company['email'] or ''}<br/>
+            {company['phone'] or ''}<br/>
+            USt-ID: {company['vat_id'] or ''}<br/>
+            IBAN: {company['iban'] or ''}<br/>
+            BIC: {company['bic'] or ''}
+            """,
+            styles["Normal"],
         )
-
-
-story.append(
-    Paragraph(
-        f"<b>{company['company_name']}</b>",
-        styles["Title"]
     )
-)
-story.append(
-    Paragraph(
-        f"""
-        {company['owner'] or ''}<br/>
-        {company['street'] or ''}<br/>
-        {company['zip'] or ''} {company['city'] or ''}<br/>
-        {company['email'] or ''}<br/>
-        {company['phone'] or ''}<br/>
-        USt-ID: {company['vat_id'] or ''}<br/>
-        IBAN: {company['iban'] or ''}<br/>
-        BIC: {company['bic'] or ''}
-        """,
-        styles["Normal"]
-    )
-)
+
     story.append(Spacer(1, 10 * mm))
 
     story.append(

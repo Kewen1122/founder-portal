@@ -1,8 +1,15 @@
-from werkzeug.security import generate_password_hash
+import os
 import sqlite3
 
-DB_NAME = "founder.db"
+from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
 
+load_dotenv()
+
+DB_NAME = os.environ.get(
+    "DB_PATH",
+    "founder.db"
+)
 
 def get_db():
     conn = sqlite3.connect(DB_NAME)
