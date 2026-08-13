@@ -1,13 +1,14 @@
 from database import init_db
 from database import get_db
 from flask import Flask, render_template, session, redirect
-from routes.auth import auth_bp
+from routes.auth import auth_bp, login_required
 from routes.licenses import licenses_bp
 from routes.customers import customers_bp
 from routes.products import products_bp
 from routes.license_generator import generator_bp
 from routes.invoices import invoices_bp
 from routes.settings import settings_bp
+from routes.users import users_bp
 
 import os
 from dotenv import load_dotenv
@@ -24,16 +25,15 @@ app.register_blueprint(products_bp)
 app.register_blueprint(generator_bp)
 app.register_blueprint(invoices_bp)
 app.register_blueprint(settings_bp)
+app.register_blueprint(users_bp)
 
 @app.route("/")
 def index():
     return redirect("/dashboard")
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
-
-    if "user_id" not in session:
-        return redirect("/login")
 
     db = get_db()
 

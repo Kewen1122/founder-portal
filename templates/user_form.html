@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Neuer Benutzer{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+                Neuen Benutzer anlegen
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Benutzername
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control"
+                        required
+                        autofocus>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Passwort
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control"
+                        minlength="8"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Rolle
+                    </label>
+
+                    <input
+                        type="text"
+                        name="role"
+                        class="form-control"
+                        value="founder">
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <a href="/users" class="btn btn-secondary">
+                        ← Zurück
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        Benutzer anlegen
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

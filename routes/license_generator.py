@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template
 from database import get_db
+from routes.auth import login_required
 
 generator_bp = Blueprint("generator", __name__)
 
 
 @generator_bp.route("/licenses/new")
+@login_required
 def new_license():
 
     db = get_db()

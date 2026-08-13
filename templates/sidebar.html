@@ -20,6 +20,16 @@
         🧾 Rechnungen
      </a>
 
+    {% if session.get("role") == "founder" %}
+    <a href="/users" class="list-group-item list-group-item-action">
+        👤 Benutzer
+    </a>
+    {% endif %}
+
+    <a href="/change-password" class="list-group-item list-group-item-action">
+        🔒 Passwort ändern
+    </a>
+
     <a href="/logout" class="list-group-item list-group-item-action text-danger">
         🚪 Logout
     </a>

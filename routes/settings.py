@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import os
 
 from database import get_db
+from routes.auth import login_required
 
 
 settings_bp = Blueprint("settings", __name__)
@@ -11,6 +12,7 @@ UPLOAD_FOLDER = "uploads/logos"
 
 
 @settings_bp.route("/settings", methods=["GET", "POST"])
+@login_required
 def settings():
 
     db = get_db()

@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, send_file, flash, redirect
 
 from database import get_db
+from routes.auth import login_required
 from services.pdf_service import create_invoice_pdf
 
 invoices_bp = Blueprint("invoices", __name__)
 
 
 @invoices_bp.route("/invoices")
+@login_required
 def invoices():
 
     db = get_db()
@@ -30,6 +32,7 @@ def invoices():
 
 
 @invoices_bp.route("/invoices/<int:id>")
+@login_required
 def invoice_detail(id):
 
     db = get_db()
@@ -67,6 +70,7 @@ def invoice_detail(id):
 
 
 @invoices_bp.route("/invoices/pdf/<int:id>")
+@login_required
 def invoice_pdf(id):
 
     db = get_db()

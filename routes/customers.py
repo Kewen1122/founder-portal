@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, flash
 from database import get_db
+from routes.auth import login_required
 
 customers_bp = Blueprint("customers", __name__)
 
 
 @customers_bp.route("/customers")
+@login_required
 def customers():
 
     db = get_db()
@@ -19,6 +21,7 @@ def customers():
 
 
 @customers_bp.route("/customers/<int:id>")
+@login_required
 def customer_detail(id):
 
     db = get_db()
@@ -37,6 +40,7 @@ def customer_detail(id):
 
 
 @customers_bp.route("/customers/new", methods=["GET", "POST"])
+@login_required
 def new_customer():
 
     if request.method == "POST":
@@ -72,6 +76,7 @@ def new_customer():
 
 
 @customers_bp.route("/customers/edit/<int:id>", methods=["GET", "POST"])
+@login_required
 def edit_customer(id):
 
     db = get_db()
@@ -115,6 +120,7 @@ def edit_customer(id):
 
 
 @customers_bp.route("/customers/delete/<int:id>")
+@login_required
 def delete_customer(id):
 
     db = get_db()

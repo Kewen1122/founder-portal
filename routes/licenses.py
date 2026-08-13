@@ -8,6 +8,7 @@ from flask import (
 )
 
 from database import get_db
+from routes.auth import login_required
 from services.license_service import (
     create_license,
     list_licenses,
@@ -22,6 +23,7 @@ licenses_bp = Blueprint("licenses", __name__)
 
 
 @licenses_bp.route("/licenses")
+@login_required
 def licenses():
 
     db = get_db()
@@ -50,6 +52,7 @@ def licenses():
 
 
 @licenses_bp.route("/licenses/new", methods=["POST"])
+@login_required
 def new_license():
 
     db = get_db()
@@ -104,6 +107,7 @@ def new_license():
 
 
 @licenses_bp.route("/licenses/<int:id>")
+@login_required
 def license_detail(id):
 
     license = get_license(id)
@@ -120,6 +124,7 @@ def license_detail(id):
 
 
 @licenses_bp.route("/licenses/download/<int:id>")
+@login_required
 def download_license(id):
 
     license = get_license(id)
@@ -141,6 +146,7 @@ def download_license(id):
 
 
 @licenses_bp.route("/licenses/revoke/<int:id>")
+@login_required
 def revoke(id):
 
     revoke_license(id)

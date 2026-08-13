@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Benutzer{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>Benutzerverwaltung</h2>
+
+    <a href="/users/new" class="btn btn-success">
+        + Neuer Benutzer
+    </a>
+
+</div>
+
+<table class="table table-hover table-bordered align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Benutzername</th>
+            <th>Rolle</th>
+            <th>Angelegt</th>
+            <th width="360">Aktionen</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for u in users %}
+
+        <tr>
+
+            <td>{{ u.username }}</td>
+            <td>{{ u.role }}</td>
+            <td>{{ u.created_at }}</td>
+
+            <td>
+
+                <form method="post" action="/users/{{ u.id }}/password" class="d-inline-flex gap-1">
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control form-control-sm"
+                        placeholder="Neues Passwort"
+                        minlength="8"
+                        style="width:160px"
+                        required>
+                    <button class="btn btn-warning btn-sm">Setzen</button>
+                </form>
+
+                {% if u.id != session.get("user_id") %}
+                <form method="post" action="/users/{{ u.id }}/delete" class="d-inline"
+                      onsubmit="return confirm('Benutzer wirklich löschen?');">
+                    <button class="btn btn-danger btn-sm">Löschen</button>
+                </form>
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="4" class="text-center">
+
+                Noch keine Benutzer vorhanden.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}
