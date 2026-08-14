@@ -53,14 +53,19 @@
 
                     <select
                         name="product_id"
+                        id="productSelect"
                         class="form-select"
-                        required>
+                        required
+                        onchange="showProductFeatures()">
+
+                        <option value="" disabled selected>Bitte wählen …</option>
 
                         {% for product in products %}
 
-                        <option value="{{ product.id }}">
+                        <option value="{{ product.id }}" data-description="{{ product.description or '' }}">
 
                             {{ product.name }} {{ product.edition }}
+                            {% if product.price %}({{ "%.0f"|format(product.price) }} €/Monat){% endif %}
 
                         </option>
 
@@ -141,6 +146,8 @@
                 </div>
 
             </div>
+
+            <div id="productFeaturesBox" class="alert alert-secondary mt-3" style="display:none; white-space:pre-line;"></div>
 
             <hr>
 
@@ -320,5 +327,20 @@
     </tbody>
 
 </table>
+
+<script>
+function showProductFeatures(){
+    var select = document.getElementById("productSelect");
+    var box = document.getElementById("productFeaturesBox");
+    var option = select.options[select.selectedIndex];
+    var description = option ? option.getAttribute("data-description") : "";
+    if(description){
+        box.textContent = description;
+        box.style.display = "block";
+    }else{
+        box.style.display = "none";
+    }
+}
+</script>
 
 {% endblock %}
