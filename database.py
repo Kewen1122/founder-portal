@@ -42,9 +42,15 @@ def init_db():
         contact TEXT,
         email TEXT,
         phone TEXT,
+        instance_url TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
     """)
+
+    try:
+        c.execute("ALTER TABLE customers ADD COLUMN instance_url TEXT")
+    except sqlite3.OperationalError:
+        pass
 
     # Software-Produkte
     c.execute("""

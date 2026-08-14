@@ -31,11 +31,37 @@ def customer_detail(id):
         (id,)
     ).fetchone()
 
+    licenses = db.execute("""
+        SELECT
+            licenses.*,
+            software_products.name AS product_name,
+            software_products.edition AS product_edition,
+            software_products.price AS product_price
+        FROM licenses
+        JOIN software_products ON software_products.id = licenses.product_id
+        WHERE licenses.customer_id=?
+        ORDER BY licenses.created_at DESC
+    """, (id,)).fetchall()
+
+    invoices = db.execute("""
+        SELECT * FROM invoices
+        WHERE customer_id=?
+        ORDER BY created_at DESC
+    """, (id,)).fetchall()
+
+    total_revenue = db.execute("""
+        SELECT COALESCE(SUM(total), 0) FROM invoices
+        WHERE customer_id=?
+    """, (id,)).fetchone()[0]
+
     db.close()
 
     return render_template(
         "customer_detail.html",
-        customer=customer
+        customer=customer,
+        licenses=licenses,
+        invoices=invoices,
+        total_revenue=total_revenue
     )
 
 
@@ -52,14 +78,16 @@ def new_customer():
                 company,
                 contact,
                 email,
-                phone
+                phone,
+                instance_url
             )
-            VALUES(?,?,?,?)
+            VALUES(?,?,?,?,?)
         """, (
             request.form["company"],
             request.form["contact"],
             request.form["email"],
-            request.form["phone"]
+            request.form["phone"],
+            request.form.get("instance_url", "")
         ))
 
         db.commit()
@@ -89,13 +117,15 @@ def edit_customer(id):
                 company=?,
                 contact=?,
                 email=?,
-                phone=?
+                phone=?,
+                instance_url=?
             WHERE id=?
         """, (
             request.form["company"],
             request.form["contact"],
             request.form["email"],
             request.form["phone"],
+            request.form.get("instance_url", ""),
             id
         ))
 

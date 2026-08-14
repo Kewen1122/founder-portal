@@ -27,6 +27,8 @@ app.register_blueprint(invoices_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(users_bp)
 
+init_db()
+
 @app.route("/")
 def index():
     return redirect("/dashboard")
@@ -84,5 +86,4 @@ def dashboard():
     )
 
 if __name__ == "__main__":
-    init_db()
     app.run(port=5050, debug=True)

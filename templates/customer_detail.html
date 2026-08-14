@@ -47,7 +47,40 @@
 
                     <h5>Lizenzen</h5>
 
-                    <p>Noch keine Lizenzen vorhanden.</p>
+                    {% if licenses %}
+
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Stufe</th>
+                                <th>Preis</th>
+                                <th>Status</th>
+                                <th>Gültig bis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for l in licenses %}
+                            <tr>
+                                <td><a href="/licenses/{{ l.id }}">{{ l.product_name }} {{ l.product_edition }}</a></td>
+                                <td>{{ "%.2f"|format(l.product_price) }} €</td>
+                                <td>
+                                    {% if l.status == "active" %}
+                                        <span class="badge bg-success">Aktiv</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Widerrufen</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ l.valid_until or "Unbegrenzt" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% else %}
+
+                    <p class="mb-0">Noch keine Lizenzen vorhanden.</p>
+
+                    {% endif %}
 
                 </div>
 
@@ -55,7 +88,52 @@
 
                     <h5>Installationen</h5>
 
-                    <p>Noch keine Installationen vorhanden.</p>
+                    {% if customer.instance_url %}
+
+                    <p class="mb-0">
+                        <a href="{{ customer.instance_url }}" target="_blank">{{ customer.instance_url }}</a>
+                    </p>
+
+                    {% else %}
+
+                    <p class="mb-0">Noch keine Installation hinterlegt.</p>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="alert alert-warning">
+
+                    <h5>Umsatz</h5>
+
+                    <p><strong>{{ "%.2f"|format(total_revenue) }} €</strong> Gesamtumsatz</p>
+
+                    {% if invoices %}
+
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Rechnung</th>
+                                <th>Datum</th>
+                                <th>Betrag</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inv in invoices %}
+                            <tr>
+                                <td><a href="/invoices/{{ inv.id }}">{{ inv.invoice_number }}</a></td>
+                                <td>{{ inv.invoice_date }}</td>
+                                <td>{{ "%.2f"|format(inv.total) }} €</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% else %}
+
+                    <p class="mb-0">Noch keine Rechnungen vorhanden.</p>
+
+                    {% endif %}
 
                 </div>
 

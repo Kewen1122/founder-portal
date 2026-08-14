@@ -87,6 +87,21 @@ Neuen Kunden anlegen
 
                 </div>
 
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Instanz-URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="instance_url"
+                        class="form-control"
+                        placeholder="https://kunde-slug.rettungsdepot.de"
+                        value="{{ customer.instance_url if customer else '' }}">
+
+                </div>
+
                 <hr>
 
                 <div class="d-flex justify-content-between">
