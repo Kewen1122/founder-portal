@@ -1,5 +1,6 @@
 from database import init_db
 from database import get_db
+from extensions import csrf
 from flask import Flask, render_template, session, redirect
 from routes.auth import auth_bp, login_required
 from routes.licenses import licenses_bp
@@ -17,6 +18,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ["SECRET_KEY"]
+csrf.init_app(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(licenses_bp)

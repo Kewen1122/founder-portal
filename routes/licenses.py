@@ -145,7 +145,7 @@ def download_license(id):
     )
 
 
-@licenses_bp.route("/licenses/revoke/<int:id>")
+@licenses_bp.route("/licenses/revoke/<int:id>", methods=["POST"])
 @login_required
 def revoke(id):
 

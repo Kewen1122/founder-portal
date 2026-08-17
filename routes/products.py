@@ -111,7 +111,7 @@ def edit_product(id):
     )
 
 
-@products_bp.route("/products/delete/<int:id>")
+@products_bp.route("/products/delete/<int:id>", methods=["POST"])
 @login_required
 def delete_product(id):
 

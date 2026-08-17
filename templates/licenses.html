@@ -22,6 +22,8 @@
 
         <form method="post" action="/licenses/new">
 
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             <div class="row">
 
                 <div class="col-md-3">
@@ -297,14 +299,17 @@
 
                 </a>
 
-                <a
-                    href="/licenses/revoke/{{ l.id }}"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('Lizenz wirklich widerrufen?');">
+                <form
+                    method="post"
+                    action="/licenses/revoke/{{ l.id }}"
+                    class="d-inline"
+                    onsubmit="return confirm('Lizenz wirklich widerrufen?');">
 
-                    Widerrufen
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                </a>
+                    <button type="submit" class="btn btn-danger btn-sm">Widerrufen</button>
+
+                </form>
 
             </td>
 

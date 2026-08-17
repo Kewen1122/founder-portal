@@ -34,6 +34,8 @@ Neues Produkt
 
 <form method="post">
 
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
 <div class="mb-3">
 
 <label>Name</label>

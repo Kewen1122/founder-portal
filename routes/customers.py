@@ -149,7 +149,7 @@ def edit_customer(id):
     )
 
 
-@customers_bp.route("/customers/delete/<int:id>")
+@customers_bp.route("/customers/delete/<int:id>", methods=["POST"])
 @login_required
 def delete_customer(id):
 
