@@ -155,6 +155,22 @@ def delete_customer(id):
 
     db = get_db()
 
+    license_count = db.execute(
+        "SELECT COUNT(*) FROM licenses WHERE customer_id=?", (id,)
+    ).fetchone()[0]
+    invoice_count = db.execute(
+        "SELECT COUNT(*) FROM invoices WHERE customer_id=?", (id,)
+    ).fetchone()[0]
+
+    if license_count or invoice_count:
+        db.close()
+        flash(
+            f"Kunde hat noch {license_count} Lizenz(en) und {invoice_count} Rechnung(en) "
+            "und kann deshalb nicht gelöscht werden. Bitte zuerst die Lizenzen widerrufen.",
+            "danger",
+        )
+        return redirect("/customers")
+
     db.execute(
         "DELETE FROM customers WHERE id=?",
         (id,)

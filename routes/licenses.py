@@ -1,3 +1,5 @@
+import json
+
 from flask import (
     Blueprint,
     render_template,
@@ -117,9 +119,15 @@ def license_detail(id):
         flash("Lizenz nicht gefunden.", "danger")
         return redirect("/licenses")
 
+    try:
+        features = json.loads(license["features_json"] or "[]")
+    except ValueError:
+        features = []
+
     return render_template(
         "license_detail.html",
         license=license,
+        features=features,
     )
 
 

@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, send_file, flash, redirect
+from datetime import date
+
+from flask import Blueprint, render_template, request, send_file, flash, redirect
 
 from database import get_db
 from routes.auth import login_required
@@ -27,7 +29,8 @@ def invoices():
 
     return render_template(
         "invoices.html",
-        invoices=invoices
+        invoices=invoices,
+        now=date.today().isoformat(),
     )
 
 
@@ -67,6 +70,30 @@ def invoice_detail(id):
         invoice=invoice,
         items=items
     )
+
+
+@invoices_bp.route("/invoices/<int:id>/mark-paid", methods=["POST"])
+@login_required
+def mark_paid(id):
+
+    db = get_db()
+
+    invoice = db.execute(
+        "SELECT id FROM invoices WHERE id=?", (id,)
+    ).fetchone()
+
+    if invoice is None:
+        db.close()
+        flash("Rechnung nicht gefunden.", "danger")
+        return redirect("/invoices")
+
+    db.execute("UPDATE invoices SET status='paid' WHERE id=?", (id,))
+    db.commit()
+    db.close()
+
+    flash("Rechnung wurde als bezahlt markiert.", "success")
+
+    return redirect(request.form.get("next") or "/invoices")
 
 
 @invoices_bp.route("/invoices/pdf/<int:id>")

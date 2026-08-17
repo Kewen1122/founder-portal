@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, flash
+from flask import Blueprint, render_template, request, redirect, flash, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 
@@ -95,3 +95,9 @@ def settings():
         "settings.html",
         settings=settings
     )
+
+
+@settings_bp.route("/settings/logo/<path:filename>")
+@login_required
+def settings_logo(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)

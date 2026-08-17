@@ -8,13 +8,9 @@
 
     <h2>Rechnungen</h2>
 
-    <a href="#" class="btn btn-success">
-
-        + Neue Rechnung
-
-    </a>
-
 </div>
+
+<p class="text-muted">Rechnungen entstehen automatisch, sobald du unter <a href="/licenses">Lizenzen</a> eine neue Lizenz ausstellst.</p>
 
 <table class="table table-hover table-bordered">
 
@@ -44,6 +40,24 @@
 
 <tr>
 
+<td>{{ invoice.invoice_number }}</td>
+
+<td>{{ invoice.company }}</td>
+
+<td>{{ invoice.invoice_date }}</td>
+
+<td>{{ "%.2f"|format(invoice.total) }} &euro;</td>
+
+<td>
+    {% if invoice.status == "paid" %}
+        <span class="badge bg-success">Bezahlt</span>
+    {% elif invoice.due_date and invoice.due_date < now %}
+        <span class="badge bg-danger">Überfällig</span>
+    {% else %}
+        <span class="badge bg-warning text-dark">Offen</span>
+    {% endif %}
+</td>
+
 <td>
 
     <a
@@ -62,6 +76,13 @@
 
     </a>
 
+    {% if invoice.status == "open" %}
+    <form method="post" action="/invoices/{{ invoice.id }}/mark-paid" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-success btn-sm">✓ Bezahlt</button>
+    </form>
+    {% endif %}
+
 </td>
 </tr>
 
@@ -69,7 +90,7 @@
 
 <tr>
 
-<td colspan="5" class="text-center">
+<td colspan="6" class="text-center">
 
 Noch keine Rechnungen vorhanden.
 

@@ -10,6 +10,8 @@ Firmeneinstellungen
 
 </h2>
 
+<p class="text-muted">Diese Angaben erscheinen auf deinen Rechnungen an Kunden.</p>
+
 <form method="post" enctype="multipart/form-data">
 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -23,7 +25,7 @@ Firmeneinstellungen
 <input
 class="form-control"
 name="company_name"
-value="{{ settings.company_name if settings else '' }}">
+value="{{ (settings.company_name or '') if settings else '' }}">
 
 </div>
 
@@ -34,7 +36,7 @@ value="{{ settings.company_name if settings else '' }}">
 <input
 class="form-control"
 name="owner"
-value="{{ settings.owner if settings else '' }}">
+value="{{ (settings.owner or '') if settings else '' }}">
 
 </div>
 
@@ -47,7 +49,7 @@ value="{{ settings.owner if settings else '' }}">
 <input
 class="form-control"
 name="street"
-value="{{ settings.street if settings else '' }}">
+value="{{ (settings.street or '') if settings else '' }}">
 
 <br>
 
@@ -60,7 +62,7 @@ value="{{ settings.street if settings else '' }}">
 <input
 class="form-control"
 name="zip"
-value="{{ settings.zip if settings else '' }}">
+value="{{ (settings.zip or '') if settings else '' }}">
 
 </div>
 
@@ -71,7 +73,7 @@ value="{{ settings.zip if settings else '' }}">
 <input
 class="form-control"
 name="city"
-value="{{ settings.city if settings else '' }}">
+value="{{ (settings.city or '') if settings else '' }}">
 
 </div>
 
@@ -84,7 +86,7 @@ value="{{ settings.city if settings else '' }}">
 <input
 class="form-control"
 name="email"
-value="{{ settings.email if settings else '' }}">
+value="{{ (settings.email or '') if settings else '' }}">
 
 <br>
 
@@ -93,7 +95,7 @@ value="{{ settings.email if settings else '' }}">
 <input
 class="form-control"
 name="phone"
-value="{{ settings.phone if settings else '' }}">
+value="{{ (settings.phone or '') if settings else '' }}">
 
 <br>
 
@@ -102,7 +104,7 @@ value="{{ settings.phone if settings else '' }}">
 <input
 class="form-control"
 name="website"
-value="{{ settings.website if settings else '' }}">
+value="{{ (settings.website or '') if settings else '' }}">
 
 <br>
 
@@ -111,7 +113,7 @@ value="{{ settings.website if settings else '' }}">
 <input
 class="form-control"
 name="vat_id"
-value="{{ settings.vat_id if settings else '' }}">
+value="{{ (settings.vat_id or '') if settings else '' }}">
 
 <br>
 
@@ -120,7 +122,7 @@ value="{{ settings.vat_id if settings else '' }}">
 <input
 class="form-control"
 name="iban"
-value="{{ settings.iban if settings else '' }}">
+value="{{ (settings.iban or '') if settings else '' }}">
 
 <br>
 
@@ -129,22 +131,29 @@ value="{{ settings.iban if settings else '' }}">
 <input
 class="form-control"
 name="bic"
-value="{{ settings.bic if settings else '' }}">
+value="{{ (settings.bic or '') if settings else '' }}">
 
 <br>
-
-<button class="btn btn-success">
 
 <div class="mb-3">
 
 <label>Firmenlogo</label>
 
+{% if settings and settings.logo %}
+<div class="mb-2">
+    <img src="{{ url_for('settings.settings_logo', filename=settings.logo) }}" alt="Aktuelles Logo" style="max-height:80px;max-width:200px;display:block;border:1px solid #dee2e6;border-radius:6px;padding:6px;">
+</div>
+{% endif %}
+
 <input
 type="file"
 name="logo"
+accept="image/png,image/jpeg,image/svg+xml"
 class="form-control">
 
 </div>
+
+<button class="btn btn-success">
 
 Speichern
 

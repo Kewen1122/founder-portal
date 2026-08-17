@@ -117,6 +117,19 @@ def delete_product(id):
 
     db = get_db()
 
+    license_count = db.execute(
+        "SELECT COUNT(*) FROM licenses WHERE product_id=?", (id,)
+    ).fetchone()[0]
+
+    if license_count:
+        db.close()
+        flash(
+            f"Produkt hat noch {license_count} Lizenz(en) und kann deshalb nicht gelöscht werden. "
+            "Du kannst es stattdessen deaktivieren.",
+            "danger",
+        )
+        return redirect("/products")
+
     db.execute(
         "DELETE FROM software_products WHERE id=?",
         (id,)

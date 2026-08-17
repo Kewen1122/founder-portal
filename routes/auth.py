@@ -54,7 +54,7 @@ def login():
 
             return redirect("/dashboard")
 
-        flash("Benutzername oder Passwort falsch.")
+        flash("Benutzername oder Passwort falsch.", "danger")
 
     return render_template("login.html")
 

@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from database import init_db
 from database import get_db
 from extensions import csrf, limiter
@@ -6,7 +8,6 @@ from routes.auth import auth_bp, login_required
 from routes.licenses import licenses_bp
 from routes.customers import customers_bp
 from routes.products import products_bp
-from routes.license_generator import generator_bp
 from routes.invoices import invoices_bp
 from routes.settings import settings_bp
 from routes.users import users_bp
@@ -25,7 +26,6 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(licenses_bp)
 app.register_blueprint(customers_bp)
 app.register_blueprint(products_bp)
-app.register_blueprint(generator_bp)
 app.register_blueprint(invoices_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(users_bp)
@@ -65,15 +65,29 @@ def dashboard():
         LIMIT 5
     """).fetchall()
 
-    latest_licenses = db.execute("""
+    expiring_licenses = db.execute("""
         SELECT
             licenses.*,
             customers.company
         FROM licenses
         JOIN customers
         ON customers.id = licenses.customer_id
-        ORDER BY licenses.created_at DESC
-        LIMIT 5
+        WHERE licenses.status = 'active'
+        AND licenses.valid_until IS NOT NULL
+        AND licenses.valid_until <= date('now', '+30 days')
+        ORDER BY licenses.valid_until ASC
+    """).fetchall()
+
+    overdue_invoices = db.execute("""
+        SELECT
+            invoices.*,
+            customers.company
+        FROM invoices
+        JOIN customers
+        ON customers.id = invoices.customer_id
+        WHERE invoices.status = 'open'
+        AND invoices.due_date < date('now')
+        ORDER BY invoices.due_date ASC
     """).fetchall()
 
     db.close()
@@ -84,8 +98,9 @@ def dashboard():
         product_count=product_count,
         active_license_count=active_license_count,
         revoked_license_count=revoked_license_count,
-        latest_customers=latest_customers,
-        latest_licenses=latest_licenses
+        expiring_licenses=expiring_licenses,
+        overdue_invoices=overdue_invoices,
+        urgent_cutoff=(date.today() + timedelta(days=7)).isoformat(),
     )
 
 if __name__ == "__main__":

@@ -82,21 +82,24 @@
 
             <div class="card-header">
 
-                <strong>Neueste Kunden</strong>
+                <strong>Lizenzen, die bald ablaufen</strong> <span class="text-muted">(nächste 30 Tage)</span>
 
             </div>
 
             <div class="card-body">
 
+                {% if expiring_licenses %}
                 <table class="table">
 
                     <thead>
 
                         <tr>
 
-                            <th>Firma</th>
+                            <th>Kunde</th>
 
-                            <th>Kontakt</th>
+                            <th>Gültig bis</th>
+
+                            <th></th>
 
                         </tr>
 
@@ -104,24 +107,22 @@
 
                     <tbody>
 
-                    {% for c in latest_customers %}
+                    {% for l in expiring_licenses %}
 
                         <tr>
 
-                            <td>{{ c.company }}</td>
+                            <td>{{ l.company }}</td>
 
-                            <td>{{ c.contact }}</td>
+                            <td>
+                                {% if l.valid_until < urgent_cutoff %}
+                                    <span class="badge bg-danger">{{ l.valid_until }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">{{ l.valid_until }}</span>
+                                {% endif %}
+                            </td>
 
-                        </tr>
-
-                    {% else %}
-
-                        <tr>
-
-                            <td colspan="2">
-
-                                Keine Kunden vorhanden.
-
+                            <td class="text-end">
+                                <a href="/licenses/{{ l.id }}" class="btn btn-primary btn-sm">Details</a>
                             </td>
 
                         </tr>
@@ -131,6 +132,9 @@
                     </tbody>
 
                 </table>
+                {% else %}
+                <p class="text-muted mb-0">Keine Lizenzen laufen in den nächsten 30 Tagen ab.</p>
+                {% endif %}
 
             </div>
 
@@ -144,12 +148,13 @@
 
             <div class="card-header">
 
-                <strong>Neueste Lizenzen</strong>
+                <strong>Überfällige Rechnungen</strong>
 
             </div>
 
             <div class="card-body">
 
+                {% if overdue_invoices %}
                 <table class="table">
 
                     <thead>
@@ -158,7 +163,9 @@
 
                             <th>Kunde</th>
 
-                            <th>Status</th>
+                            <th>Fällig seit</th>
+
+                            <th></th>
 
                         </tr>
 
@@ -166,44 +173,16 @@
 
                     <tbody>
 
-                    {% for l in latest_licenses %}
+                    {% for i in overdue_invoices %}
 
                         <tr>
 
-                            <td>{{ l.company }}</td>
+                            <td>{{ i.company }}</td>
 
-                            <td>
+                            <td><span class="badge bg-danger">{{ i.due_date }}</span></td>
 
-                                {% if l.status == "active" %}
-
-                                    <span class="badge bg-success">
-
-                                        Aktiv
-
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge bg-danger">
-
-                                        Widerrufen
-
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                    {% else %}
-
-                        <tr>
-
-                            <td colspan="2">
-
-                                Noch keine Lizenzen vorhanden.
-
+                            <td class="text-end">
+                                <a href="/invoices/{{ i.id }}" class="btn btn-primary btn-sm">Details</a>
                             </td>
 
                         </tr>
@@ -213,6 +192,9 @@
                     </tbody>
 
                 </table>
+                {% else %}
+                <p class="text-muted mb-0">Keine überfälligen Rechnungen.</p>
+                {% endif %}
 
             </div>
 

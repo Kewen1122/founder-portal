@@ -16,6 +16,16 @@ Rechnung {{ invoice.invoice_number }}
 
     </h2>
 
+    <div>
+
+    {% if invoice.status == "open" %}
+    <form method="post" action="/invoices/{{ invoice.id }}/mark-paid" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="next" value="/invoices/{{ invoice.id }}">
+        <button type="submit" class="btn btn-outline-success">✓ Als bezahlt markieren</button>
+    </form>
+    {% endif %}
+
     <a
         href="/invoices/pdf/{{ invoice.id }}"
         class="btn btn-success">
@@ -23,6 +33,8 @@ Rechnung {{ invoice.invoice_number }}
         📄 PDF herunterladen
 
     </a>
+
+    </div>
 
 </div>
 
