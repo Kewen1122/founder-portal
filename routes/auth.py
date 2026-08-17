@@ -2,6 +2,7 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from database import get_db
+from extensions import limiter
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -28,6 +29,7 @@ def founder_required(fn):
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
+@limiter.limit("10 per minute", methods=["POST"])
 def login():
 
     if request.method == "POST":
