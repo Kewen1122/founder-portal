@@ -1,4 +1,5 @@
 import os
+import secrets
 import sqlite3
 
 from dotenv import load_dotenv
@@ -158,6 +159,8 @@ def init_db():
 
     if c.fetchone()[0] == 0:
 
+        initial_password = secrets.token_urlsafe(12)
+
         c.execute("""
         INSERT INTO users(
             username,
@@ -167,9 +170,15 @@ def init_db():
         VALUES(?,?,?)
         """, (
             "admin",
-            generate_password_hash("admin123"),
+            generate_password_hash(initial_password),
             "founder"
         ))
+
+        print(
+            f"[init_db] Erstbenutzer angelegt: username='admin' password='{initial_password}' "
+            "-- bitte sofort einloggen und Passwort ändern.",
+            flush=True,
+        )
 
     db.commit()
     db.close()
