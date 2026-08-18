@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from database import init_db
 from database import get_db
 from extensions import csrf, limiter
-from flask import Flask, render_template, session, redirect
+from flask import Flask, render_template, session, redirect, jsonify
 from routes.auth import auth_bp, login_required
 from routes.licenses import licenses_bp
 from routes.customers import customers_bp
@@ -36,6 +36,16 @@ init_db()
 def index():
     return redirect("/dashboard")
 
+@app.route("/healthz")
+def healthz():
+    try:
+        db = get_db()
+        db.execute("SELECT 1")
+        db.close()
+    except Exception as e:
+        return jsonify(status="error", detail=str(e)), 503
+    return jsonify(status="ok"), 200
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
@@ -57,13 +67,6 @@ def dashboard():
     revoked_license_count = db.execute(
         "SELECT COUNT(*) FROM licenses WHERE status='revoked'"
     ).fetchone()[0]
-
-    latest_customers = db.execute("""
-        SELECT *
-        FROM customers
-        ORDER BY created_at DESC
-        LIMIT 5
-    """).fetchall()
 
     expiring_licenses = db.execute("""
         SELECT
