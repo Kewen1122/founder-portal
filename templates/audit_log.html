@@ -8,6 +8,30 @@
 
 <p class="text-muted">Zeigt die letzten 250 Aktionen im Founder-Portal — wer hat wann was geändert.</p>
 
+<form method="get" class="row g-2 mb-3 align-items-end">
+    <div class="col-auto">
+        <label class="form-label mb-0">Benutzer</label>
+        <select name="username" class="form-select form-select-sm">
+            <option value="">Alle</option>
+            {% for u in usernames %}
+            <option value="{{ u }}" {% if u == username %}selected{% endif %}>{{ u }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-auto">
+        <label class="form-label mb-0">Von</label>
+        <input type="date" name="date_from" class="form-control form-control-sm" value="{{ date_from }}">
+    </div>
+    <div class="col-auto">
+        <label class="form-label mb-0">Bis</label>
+        <input type="date" name="date_to" class="form-control form-control-sm" value="{{ date_to }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">Filtern</button>
+        <a href="/audit-log" class="btn btn-outline-secondary btn-sm">Zurücksetzen</a>
+    </div>
+</form>
+
 <table class="table table-striped table-hover">
 
 <thead>

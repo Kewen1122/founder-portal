@@ -31,7 +31,9 @@ def new_user():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = request.form.get("role", "founder").strip() or "founder"
+        role = request.form.get("role", "").strip()
+        if role not in ("founder", "mitarbeiter"):
+            role = "mitarbeiter"
 
         if len(password) < 8:
             flash("Das Passwort muss mindestens 8 Zeichen haben.", "danger")

@@ -221,3 +221,47 @@ def test_founder_can_reset_other_users_2fa(client):
     totp_secret = conn.execute("SELECT totp_secret FROM users WHERE id=?", (uid,)).fetchone()[0]
     conn.close()
     assert totp_secret is None, "totp_secret sollte nach Reset NULL sein"
+
+
+def test_new_user_role_is_whitelisted(client):
+    login(client)
+    r = client.get("/users/new")
+    tok = re.search(rb'name="csrf_token" value="([^"]+)"', r.data).group(1).decode()
+    client.post(
+        "/users/new",
+        data={"username": "ci-eviluser", "password": "eviluser-pw-1", "role": "superadmin", "csrf_token": tok},
+    )
+
+    conn = sqlite3.connect(sys.modules["database"].DB_NAME)
+    role = conn.execute("SELECT role FROM users WHERE username='ci-eviluser'").fetchone()[0]
+    conn.close()
+    assert role == "mitarbeiter", "unbekannte Rolle sollte auf das niedrigste Recht zurueckfallen"
+
+    client.post(
+        "/users/new",
+        data={"username": "ci-founder2", "password": "founder2-pw-1", "role": "founder", "csrf_token": tok},
+    )
+    conn = sqlite3.connect(sys.modules["database"].DB_NAME)
+    role = conn.execute("SELECT role FROM users WHERE username='ci-founder2'").fetchone()[0]
+    conn.close()
+    assert role == "founder"
+
+
+def test_audit_log_filter_by_username(client):
+    login(client)
+
+    r = client.get("/customers/new")
+    tok = re.search(rb'name="csrf_token" value="([^"]+)"', r.data).group(1).decode()
+    client.post(
+        "/customers/new",
+        data={"company": "CI-Filter GmbH", "contact": "x", "email": "x@example.com", "phone": "1", "csrf_token": tok},
+    )
+
+    r = client.get("/audit-log?username=citest")
+    assert r.status_code == 200
+    assert b"Kunde angelegt" in r.data
+
+    r = client.get("/audit-log?username=nichtvorhanden")
+    assert r.status_code == 200
+    assert b"Kunde angelegt" not in r.data
+    assert b"Noch keine Aktivit" in r.data
