@@ -53,6 +53,11 @@ def init_db():
     except sqlite3.OperationalError:
         pass
 
+    try:
+        c.execute("ALTER TABLE users ADD COLUMN totp_secret TEXT")
+    except sqlite3.OperationalError:
+        pass
+
     # Software-Produkte
     c.execute("""
     CREATE TABLE IF NOT EXISTS software_products(

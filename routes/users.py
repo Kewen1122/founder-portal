@@ -82,6 +82,21 @@ def set_user_password(id):
     return redirect("/users")
 
 
+@users_bp.route("/users/<int:id>/reset-2fa", methods=["POST"])
+@founder_required
+def reset_2fa(id):
+
+    db = get_db()
+    target = db.execute("SELECT username FROM users WHERE id=?", (id,)).fetchone()
+    db.execute("UPDATE users SET totp_secret=NULL WHERE id=?", (id,))
+    db.commit()
+    db.close()
+
+    log_action("2FA zurückgesetzt", target["username"] if target else str(id))
+    flash("Zwei-Faktor-Authentifizierung wurde zurückgesetzt.", "success")
+    return redirect("/users")
+
+
 @users_bp.route("/users/<int:id>/delete", methods=["POST"])
 @founder_required
 def delete_user(id):
