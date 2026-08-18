@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from database import get_db
 from extensions import limiter
+from utils import log_action
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -52,6 +53,7 @@ def login():
             session["username"] = user["username"]
             session["role"] = user["role"]
 
+            log_action("Login")
             return redirect("/dashboard")
 
         flash("Benutzername oder Passwort falsch.", "danger")
@@ -61,6 +63,8 @@ def login():
 
 @auth_bp.route("/logout")
 def logout():
+    if "user_id" in session:
+        log_action("Logout")
     session.clear()
     return redirect("/login")
 
@@ -103,6 +107,7 @@ def change_password():
         db.commit()
         db.close()
 
+        log_action("Eigenes Passwort geändert")
         flash("Passwort wurde geändert.", "success")
         return redirect("/dashboard")
 

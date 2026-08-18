@@ -120,6 +120,19 @@ def init_db():
     """)
 
 
+    # Aktivitaets-Log
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS activity_log(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        username TEXT,
+        action TEXT NOT NULL,
+        details TEXT,
+        ip TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
    # Firmeneinstellungen
     c.execute("""
     CREATE TABLE IF NOT EXISTS settings(

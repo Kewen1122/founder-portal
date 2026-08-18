@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, flash
 from database import get_db
 from routes.auth import login_required
+from utils import log_action
 
 customers_bp = Blueprint("customers", __name__)
 
@@ -93,6 +94,7 @@ def new_customer():
         db.commit()
         db.close()
 
+        log_action("Kunde angelegt", request.form["company"])
         flash("Kunde wurde angelegt.")
 
         return redirect("/customers")
@@ -132,6 +134,7 @@ def edit_customer(id):
         db.commit()
         db.close()
 
+        log_action("Kunde bearbeitet", request.form["company"])
         flash("Kunde gespeichert.")
 
         return redirect("/customers")
@@ -171,6 +174,8 @@ def delete_customer(id):
         )
         return redirect("/customers")
 
+    company = db.execute("SELECT company FROM customers WHERE id=?", (id,)).fetchone()
+
     db.execute(
         "DELETE FROM customers WHERE id=?",
         (id,)
@@ -179,6 +184,7 @@ def delete_customer(id):
     db.commit()
     db.close()
 
+    log_action("Kunde gelöscht", company["company"] if company else str(id))
     flash("Kunde gelöscht.")
 
     return redirect("/customers")

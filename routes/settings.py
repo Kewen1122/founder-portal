@@ -4,6 +4,7 @@ import os
 
 from database import get_db
 from routes.auth import login_required
+from utils import log_action
 
 
 settings_bp = Blueprint("settings", __name__)
@@ -77,6 +78,7 @@ def settings():
 
         db.commit()
 
+        log_action("Firmeneinstellungen geändert")
         flash(
             "Einstellungen gespeichert.",
             "success"

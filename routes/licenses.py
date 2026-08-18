@@ -11,6 +11,7 @@ from flask import (
 
 from database import get_db
 from routes.auth import login_required
+from utils import log_action
 from services.license_service import (
     create_license,
     list_licenses,
@@ -92,6 +93,7 @@ def new_license():
             price=float(product["price"]),
         )
 
+        log_action("Lizenz erstellt", f"{product['name']} {product['edition']} fuer Kunde #{customer_id}")
         flash(
             "Lizenz und Rechnung wurden erfolgreich erstellt.",
             "success",
@@ -157,8 +159,10 @@ def download_license(id):
 @login_required
 def revoke(id):
 
+    license = get_license(id)
     revoke_license(id)
 
+    log_action("Lizenz widerrufen", license["company"] if license else str(id))
     flash(
         "Lizenz wurde widerrufen.",
         "warning",

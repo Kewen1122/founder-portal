@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, send_file, flash, redirec
 
 from database import get_db
 from routes.auth import login_required
+from utils import log_action
 from services.pdf_service import create_invoice_pdf
 
 invoices_bp = Blueprint("invoices", __name__)
@@ -79,7 +80,7 @@ def mark_paid(id):
     db = get_db()
 
     invoice = db.execute(
-        "SELECT id FROM invoices WHERE id=?", (id,)
+        "SELECT id, invoice_number FROM invoices WHERE id=?", (id,)
     ).fetchone()
 
     if invoice is None:
@@ -91,6 +92,7 @@ def mark_paid(id):
     db.commit()
     db.close()
 
+    log_action("Rechnung als bezahlt markiert", invoice["invoice_number"])
     flash("Rechnung wurde als bezahlt markiert.", "success")
 
     return redirect(request.form.get("next") or "/invoices")

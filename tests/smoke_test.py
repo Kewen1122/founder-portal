@@ -17,9 +17,9 @@ APP_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(APP_DIR))
 
 APP_MODULES = [
-    "app", "database", "extensions",
+    "app", "database", "extensions", "utils",
     "routes.auth", "routes.licenses", "routes.customers", "routes.products",
-    "routes.invoices", "routes.settings", "routes.users",
+    "routes.invoices", "routes.settings", "routes.users", "routes.audit",
     "services.license_service", "services.invoice_service", "services.pdf_service",
     "services.crypto", "services.customer_service", "services.licensing",
 ]
@@ -89,7 +89,7 @@ def test_login_succeeds(client):
 @pytest.mark.parametrize("path", [
     "/dashboard", "/customers", "/customers/new", "/products", "/products/new",
     "/licenses", "/users", "/users/new", "/settings", "/change-password",
-    "/invoices",
+    "/invoices", "/audit-log",
 ])
 def test_core_pages_render(client, path):
     login(client)
@@ -114,3 +114,36 @@ def test_customer_create_end_to_end(client):
     )
     assert r.status_code == 200
     assert b"CI-Testkunde GmbH" in r.data
+
+
+def test_actions_write_to_audit_log(client):
+    login(client)
+    r = client.get("/customers/new")
+    token = re.search(rb'name="csrf_token" value="([^"]+)"', r.data).group(1).decode()
+    client.post(
+        "/customers/new",
+        data={
+            "company": "CI-Auditkunde GmbH",
+            "contact": "x",
+            "email": "x@example.com",
+            "phone": "123",
+            "csrf_token": token,
+        },
+    )
+
+    conn = sqlite3.connect(sys.modules["database"].DB_NAME)
+    rows = conn.execute(
+        "SELECT action, details, username FROM activity_log ORDER BY id"
+    ).fetchall()
+    conn.close()
+
+    actions = [r[0] for r in rows]
+    assert "Login" in actions
+    assert "Kunde angelegt" in actions
+    entry = next(r for r in rows if r[0] == "Kunde angelegt")
+    assert entry[1] == "CI-Auditkunde GmbH"
+    assert entry[2] == "citest"
+
+    r = client.get("/audit-log")
+    assert b"Kunde angelegt" in r.data
+    assert b"CI-Auditkunde GmbH" in r.data

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Aktivitätsprotokoll{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Aktivitätsprotokoll</h2>
+
+<p class="text-muted">Zeigt die letzten 250 Aktionen im Founder-Portal — wer hat wann was geändert.</p>
+
+<table class="table table-striped table-hover">
+
+<thead>
+<tr>
+<th>Zeit</th>
+<th>Benutzer</th>
+<th>Aktion</th>
+<th>Details</th>
+<th>IP</th>
+</tr>
+</thead>
+
+<tbody>
+{% for l in logs %}
+<tr>
+<td>{{ l.created_at }}</td>
+<td>{{ l.username or "-" }}</td>
+<td>{{ l.action }}</td>
+<td>{{ l.details or "" }}</td>
+<td>{{ l.ip or "" }}</td>
+</tr>
+{% else %}
+<tr>
+<td colspan="5" class="text-center text-muted">Noch keine Aktivitäten aufgezeichnet.</td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+{% endblock %}

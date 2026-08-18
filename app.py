@@ -11,6 +11,7 @@ from routes.products import products_bp
 from routes.invoices import invoices_bp
 from routes.settings import settings_bp
 from routes.users import users_bp
+from routes.audit import audit_bp
 
 import os
 from dotenv import load_dotenv
@@ -29,6 +30,7 @@ app.register_blueprint(products_bp)
 app.register_blueprint(invoices_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(users_bp)
+app.register_blueprint(audit_bp)
 
 init_db()
 

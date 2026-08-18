@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, flash
 from database import get_db
 from routes.auth import login_required
+from utils import log_action
 
 products_bp = Blueprint("products", __name__)
 
@@ -53,6 +54,7 @@ def new_product():
         db.commit()
         db.close()
 
+        log_action("Produkt angelegt", f"{request.form['name']} {request.form['edition']}")
         flash("Produkt wurde angelegt.")
 
         return redirect("/products")
@@ -94,6 +96,7 @@ def edit_product(id):
         db.commit()
         db.close()
 
+        log_action("Produkt bearbeitet", f"{request.form['name']} {request.form['edition']}")
         flash("Produkt gespeichert.")
 
         return redirect("/products")
@@ -130,6 +133,8 @@ def delete_product(id):
         )
         return redirect("/products")
 
+    name = db.execute("SELECT name, edition FROM software_products WHERE id=?", (id,)).fetchone()
+
     db.execute(
         "DELETE FROM software_products WHERE id=?",
         (id,)
@@ -138,6 +143,7 @@ def delete_product(id):
     db.commit()
     db.close()
 
+    log_action("Produkt gelöscht", f"{name['name']} {name['edition']}" if name else str(id))
     flash("Produkt gelöscht.")
 
     return redirect("/products")
